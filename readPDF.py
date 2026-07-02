@@ -37,14 +37,26 @@ def smart_chunk_pdf(pdf_path, chunk_size=500, overlap=100):
             start += chunk_size - overlap
     doc.close()
     return all_chunk
+    
 print("Creating chunks...")
 chunks = smart_chunk_pdf("CV_EngineeringResumes.pdf", chunk_size=500)
 # load model for embedding
 print("Loading all-MiniLM-L6-V2 model...")
 model = SentenceTransformer('all-MiniLM-L6-V2')
 # conver all chunks into enbeddings
-
 chunk_text = [chunk["text"] for chunk in chunks]
-
 print("Embedding chunks...")
 embeddings = model.encode(chunk_text)
+
+reg_data = []
+for text, embedding in zip(chunk_text, embeddings):
+    reg_data.append({
+        "text": text,
+        "embedding": embedding.tolist()
+    })
+with open("vector_store.json", "w") as file:
+    json.dump(reg_data, file)
+print("Embeddings inserted into vector_store")
+
+# -> TOBE-continue
+# def retrieve_relevant_chunks(user_query, file_path, top_k=2):
