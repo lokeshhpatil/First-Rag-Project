@@ -1,0 +1,8 @@
+fitz
+sentence-transformers
+python-dotenv
+pinecone-client  
+ollama           # ⬅️ Free local AI
+requests         # For HTTP requests to Ollama API
+# transformers     # Alternative if Ollama doesn't work
+# torch            # Required for transformers
