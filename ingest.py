@@ -5,7 +5,7 @@ os.environ["HF_HUB_OFFLINE"] = "1"
 from sentence_transformers import SentenceTransformer
 from src.config import EMBEDDING_MODEL_NAME
 from src.chunker import smart_chunk_pdf
-from src.vector_store import get_pinecone_index, delete_chunks_by_source, upsert_chunks
+from src.vector_store import get_pinecone_index, delete_chunks_by_source, upsert_chunks_with_meta_data
 
 def run_ingestion(pdf_path):
     print(f"--- Starting Ingestion Pipeline for: {pdf_path} ---")
@@ -34,7 +34,7 @@ def run_ingestion(pdf_path):
 
     # 4. Upload to Pinecone
     print("\n[Step 4/4] Uploading new vectors to Pinecone...")
-    upsert_chunks(index, chunks, embeddings)
+    upsert_chunks_with_meta_data(index, chunks, embeddings)
     
     print("\n--- Ingestion Pipeline Finished Successfully! ---")
 
