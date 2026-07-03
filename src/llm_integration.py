@@ -59,17 +59,27 @@ class FreeLLM:
         context = "\n\n".join(context_chunk[:2])
         if len(context) > 1500:
             context = context[:1500] # small model has 2048 token limit
-        
         if self.ollama_available:
             return self._ask_ollama(question, context)
 
         return self._fallback_response(question, context)
     
     def _ask_ollama(self, question: str, context: str) -> str:
-        prompt = f"""Answer the question based on the context.
-                    Context: {context}
-                    Question: {question}
-                    Answer:"""
+        
+        prompt = f"""You are a helpful AI assistant.
+
+Answer the question using ONLY the context below.
+
+If the answer is not in the context, reply:
+"I couldn't find the answer in the provided context."
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:"""
         
         payload = {
             "model": self.model,

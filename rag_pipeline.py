@@ -36,6 +36,7 @@ class RAGPipeline:
         # 2. Extract text
         chunks = [result['text'] for result in search_results]
         sources = [result.get('metadata', {}) for result in search_results]
+        scores = [result.get('score', 0.0) for result in search_results]
         
         # 3. Generate answer with SmolLM
         logger.info(f"Generating answer with {self.config.OLLAMA_MODEL}...")
@@ -45,7 +46,8 @@ class RAGPipeline:
             "question": question,
             "answer": answer,
             "sources": sources,
-            "chunks": chunks
+            "chunks": chunks,
+            "scores": scores
         }
     
     def stream_ask(self, question: str, top_k: int = None):
@@ -98,7 +100,10 @@ if __name__ == "__main__":
                 print(f"\n📚 Sources: Found {len(result['sources'])} relevant chunks")
                 for i, source in enumerate(result['sources'], 1):
                     page = source.get('page_number', 'unknown')
-                    print(f"  {i}. Page {page}")
+                    score = result['scores'][i - 1]
+                    text = result['chunks'][i - 1]
+                    print(f"  {i}. Page {page} (Similarity Score: {score:.4f})")
+                    print(f"     Content: \"{text[:180]}...\"\n")
             print("\n" + "-"*60 + "\n")
             
         except KeyboardInterrupt:

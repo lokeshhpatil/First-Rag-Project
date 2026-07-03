@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 from src.config import EMBEDDING_MODEL_NAME
 from src.vector_store import get_pinecone_index
 
-def query_vector_store(query_text, top_k=2):
+def query_vector_store(query_text, top_k=4):
     """
     Connects to Pinecone, embeds the query text, retrieves the closest matching chunks,
     and returns them with their metadata.
